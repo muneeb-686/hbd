@@ -13,6 +13,7 @@
     --primary-color: #667eea;
     --secondary-color: #764ba2;
     --accent-color: #f093fb;
+    --red-color: #ff3333;
     --success-color: #4ecdc4;
     --warning-color: #feca57;
     --danger-color: #ff6b6b;
@@ -741,7 +742,7 @@ body {
 }
 
 .footer-content i {
-    color: var(--accent-color);
+    color: var(--red-color);
     margin: 0 var(--spacing-xs);
 }
 
