@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Professional birthday wishes page with elegant design">
-    <title>Happy Birthday!</title>
+    <meta name="description" content="Beautiful birthday wishes page for someone special">
+    <title>Happy Birthday</title>
     
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -16,27 +16,47 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+    <!-- Animated Background -->
+    <div class="animated-bg">
+        <div class="stars"></div>
+        <div class="floating-hearts">
+            <div class="heart"></div>
+            <div class="heart"></div>
+            <div class="heart"></div>
+            <div class="heart"></div>
+        </div>
+    </div>
+
     <!-- Loading Screen -->
     <div class="loading-screen" id="loadingScreen">
         <div class="loading-content">
-            <div class="hero-icon">
-                        <i class="fas fa-gift"></i>
+            <div class="gift-box">
+                <div class="gift-lid"></div>
+                <div class="gift-body"></div>
+                <div class="gift-ribbon"></div>
+                <div class="gift-bow"></div>
             </div>
-            <p class="loading-text">Preparing Something Special...</p>
+            <p class="loading-text">Preparing something magical...</p>
         </div>
     </div>
 
     <!-- Navigation -->
-    <nav class="navbar">
+    <nav class="navbar" id="navbar">
         <div class="nav-container">
             <div class="nav-brand">
                 <i class="fas fa-birthday-cake"></i>
-                <span>BirthdayWish</span>
+                <span>Special Day</span>
             </div>
             <div class="nav-menu">
                 <a href="#home" class="nav-link active">Home</a>
                 <a href="#wishes" class="nav-link">Wishes</a>
+                <a href="#celebration" class="nav-link">Celebrate</a>
                 <a href="#memories" class="nav-link">Memories</a>
+            </div>
+            <div class="mobile-toggle" id="mobileToggle">
+                <span></span>
+                <span></span>
+                <span></span>
             </div>
         </div>
     </nav>
@@ -45,171 +65,221 @@
     <main class="main-content">
         <!-- Hero Section -->
         <section class="hero-section" id="home">
-            <div class="hero-background">
-                <div class="hero-particles"></div>
-                <div class="floating-elements">
-                    <div class="floating-balloon balloon-1"></div>
-                    <div class="floating-balloon balloon-2"></div>
-                    <div class="floating-balloon balloon-3"></div>
-                </div>
-            </div>
-            
             <div class="hero-container">
                 <div class="hero-content">
-                    <div class="hero-icon">
-                        <i class="fas fa-gift"></i>
+                    <div class="hero-badge">
+                        <i class="fas fa-star"></i>
+                        <span>Special Celebration</span>
                     </div>
+                    
                     <h1 class="hero-title">
-                        <span class="title-line">Happy Birthday</span>
-                        <span class="title-highlight">Beautiful Soul!</span>
+                        <span class="title-main">Happy Birthday</span>
+                        <span class="title-accent">Zimal Khan</span>
                     </h1>
-                    <p class="hero-subtitle">
-                        Your birthday might be over, but the celebration of YOU never ends. Wishing you happiness every day!
-                        May this year brings you endless joy, unforgettable moments, 
-                        and all the happiness your heart can hold.
+                    
+                    <p class="hero-description">
+                        May this new year of your life be filled with endless adventures, heartwarming moments, 
+                        and dreams coming true.
                     </p>
                     
-                    <div class="hero-actions">
+                    <div class="hero-buttons">
                         <button class="btn btn-primary" id="celebrateBtn">
                             <i class="fas fa-sparkles"></i>
-                            <span>Celebrate Now</span>
+                            <span>Start Celebration</span>
                         </button>
-                        <!-- <button class="btn btn-secondary" id="wishBtn">
+                        <!-- <button class="btn btn-secondary" id="wishesBtn">
                             <i class="fas fa-heart"></i>
-                            <span>Send Wishes</span>
+                            <span>View Wishes</span>
                         </button> -->
                     </div>
                 </div>
                 
                 <div class="hero-visual">
-                    <div class="birthday-cake-container">
-                        <div class="birthday-cake">
-                            <div class="cake-base">
-                                <div class="cake-decoration"></div>
-                            </div>
-                            <div class="cake-middle">
-                                <div class="cake-decoration"></div>
-                            </div>
-                            <div class="cake-top">
-                                <div class="cake-decoration"></div>
-                            </div>
-                            <div class="cake-candles">
-                                <div class="candle">
-                                    <div class="flame"></div>
-                                </div>
-                                <div class="candle">
-                                    <div class="flame"></div>
-                                </div>
-                                <div class="candle">
-                                    <div class="flame"></div>
-                                </div>
-                                <div class="candle">
-                                    <div class="flame"></div>
-                                </div>
-                                <div class="candle">
-                                    <div class="flame"></div>
+                    
+                    <div class="birthday-scene">
+                        <div class="cake-container">
+                            
+                            <div class="cake">
+                                <div class="cake-layer layer-bottom"></div>
+                                <div class="cake-layer layer-middle"></div>
+                                <div class="cake-layer layer-top"></div>
+                                <div class="cake-candles">
+                                    <div class="candle"><div class="flame"></div></div>
+                                    <div class="candle"><div class="flame"></div></div>
+                                    <div class="candle"><div class="flame"></div></div>
+                                    <div class="candle"><div class="flame"></div></div>
+                                    <div class="candle"><div class="flame"></div></div>
                                 </div>
                             </div>
                         </div>
+                        
+                        <div class="balloons">
+                            <div class="balloon balloon-pink"></div>
+                            <div class="balloon balloon-blue"></div>
+                            <div class="balloon balloon-yellow"></div>
+                        </div>
+                        
+                        <div class="confetti-burst" id="confettiBurst"></div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Wishes Section -->
+        <!-- Birthday Wishes Section -->
         <section class="wishes-section" id="wishes">
-            <div class="section-container">
+            <div class="container">
                 <div class="section-header">
-                    <h2 class="section-title">Birthday Wishes</h2>
-                    <p class="section-subtitle">Heartfelt messages to make your day extra special</p>
+                    <h2 class="section-title">Heartfelt Birthday Wishes</h2>
+                    <p class="section-subtitle">Messages filled with love and warm thoughts for your special day</p>
                 </div>
                 
                 <div class="wishes-grid">
                     <div class="wish-card">
-                        <div class="wish-icon">
-                            <i class="fas fa-star"></i>
+                        <div class="card-icon">
+                            <i class="fas fa-gift"></i>
                         </div>
-                        <h3 class="wish-title">Another Year Wiser</h3>
-                        <p class="wish-text">
-                            With every passing year comes new doors to open, lessons to learn, and memories to create. May this year be the brightest and most fulfilling one for you.
+                        <h3 class="card-title">Another Year of Amazing</h3>
+                        <p class="card-text">
+                            Each year brings new opportunities to grow, learn, and create beautiful memories. 
+                            May this year be your most wonderful yet, filled with moments that take your breath away.
                         </p>
+                        <div class="card-decoration"></div>
                     </div>
                     
                     <div class="wish-card featured">
-                        <div class="wish-icon">
+                        <div class="card-icon">
                             <i class="fas fa-heart"></i>
                         </div>
-                        <h3 class="wish-title">Love & Happiness</h3>
-                        <p class="wish-text">
-                            May this year be surrounded by happiness, filled with laughter, 
-                            wrapped with pleasure and tied with all the love your heart can hold!
+                        <h3 class="card-title">Love & Joy Forever</h3>
+                        <p class="card-text">
+                            You deserve all the happiness in the world. May your heart be filled with laughter, 
+                            your days with sunshine, and your life with endless love and cherished friendships.
                         </p>
+                        <div class="card-decoration"></div>
                     </div>
                     
                     <div class="wish-card">
-                        <div class="wish-icon">
-                            <i class="fas fa-rainbow"></i>
+                        <div class="card-icon">
+                            <i class="fas fa-star"></i>
                         </div>
-                        <h3 class="wish-title">Dreams Come True</h3>
-                        <p class="wish-text">
-                            May all your dreams and aspirations become reality. 
-                            This new year of your life is a blank canvas - 
-                            paint it with vibrant colors and amazing adventures.
+                        <h3 class="card-title">Dreams Taking Flight</h3>
+                        <p class="card-text">
+                            This new chapter of your life is like a blank canvas waiting for your masterpiece. 
+                            Paint it with bold colors, exciting adventures, and dreams that soar high.
                         </p>
+                        <div class="card-decoration"></div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Memories Section -->
-        <section class="memories-section" id="memories">
-            <div class="section-container">
+        <!-- Celebration Section -->
+        <!-- <section class="celebration-section" id="celebration">
+            <div class="container">
                 <div class="section-header">
-                    <h2 class="section-title">Create Beautiful Memories</h2>
-                    <p class="section-subtitle">Interactive elements to make this birthday unforgettable</p>
+                    <h2 class="section-title">Let's Celebrate Together</h2>
+                    <p class="section-subtitle">Interactive moments to make this day unforgettable</p>
                 </div>
                 
-                <div class="memories-content">
-                    <div class="memory-feature">
-                        <div class="feature-visual">
-                            <div class="confetti-container" id="confettiContainer"></div>
-                            <i class="fas fa-magic feature-icon"></i>
+                <div class="celebration-grid">
+                    <div class="celebration-card">
+                        <div class="celebration-visual" id="confettiArea">
+                            <div class="visual-icon">
+                                <i class="fas fa-magic"></i>
+                            </div>
                         </div>
-                        <div class="feature-content">
-                            <h3 class="feature-title">Celebration Time</h3>
-                            <p class="feature-text">
-                                Click the celebration button to fill the screen with 
-                                magical confetti and create an instant party atmosphere!
+                        <div class="celebration-content">
+                            <h3 class="celebration-title">Magical Confetti</h3>
+                            <p class="celebration-text">
+                                Fill the screen with colorful confetti and create an instant party atmosphere!
                             </p>
                             <button class="btn btn-accent" id="confettiBtn">
-                                <i class="fas fa-party-horn"></i>
+                                <i class="fas fa-wand-magic-sparkles"></i>
                                 Launch Confetti
                             </button>
                         </div>
                     </div>
-              
-                    <!-- <div class="memory-feature reverse">
-                        <div class="feature-visual">
-                            <div class="music-visualizer" id="musicVisualizer">
-                                <div class="music-bar"></div>
-                                <div class="music-bar"></div>
-                                <div class="music-bar"></div>
-                                <div class="music-bar"></div>
-                                <div class="music-bar"></div>
+                    
+                    <div class="celebration-card">
+                        <div class="celebration-visual">
+                            <div class="music-player" id="musicPlayer">
+                                <div class="equalizer">
+                                    <div class="bar"></div>
+                                    <div class="bar"></div>
+                                    <div class="bar"></div>
+                                    <div class="bar"></div>
+                                    <div class="bar"></div>
+                                </div>
+                                <div class="play-button" id="playButton">
+                                    <i class="fas fa-play"></i>
+                                </div>
                             </div>
                         </div>
-                        <div class="feature-content">
-                            <h3 class="feature-title">Birthday Symphony</h3>
-                            <p class="feature-text">
-                                Start the birthday music and watch the visual symphony 
-                                dance to celebrate this special occasion.
+                        <div class="celebration-content">
+                            <h3 class="celebration-title">Birthday Symphony</h3>
+                            <p class="celebration-text">
+                                Start the birthday music and watch the visual symphony dance in celebration!
                             </p>
                             <button class="btn btn-accent" id="musicBtn">
                                 <i class="fas fa-music"></i>
-                                Play Birthday Song
+                                Play Music
                             </button>
                         </div>
-                    </div> -->
+                    </div>
+                </div>
+            </div>
+        </section> -->
+
+        <!-- Memories Section -->
+        <section class="memories-section" id="memories">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Creating Beautiful Memories</h2>
+                    <p class="section-subtitle">Special moments that will last forever</p>
+                </div>
+                
+                <div class="memory-timeline">
+                    <div class="memory-item">
+                        <div class="memory-icon">
+                            <i class="fas fa-camera"></i>
+                        </div>
+                        <div class="memory-content">
+                            <h3>Capture This Moment</h3>
+                            <p>Take a screenshot of this beautiful celebration page to keep this memory forever.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="memory-item">
+                        <div class="memory-icon">
+                            <i class="fas fa-share-nodes"></i>
+                        </div>
+                        <div class="memory-content">
+                            <h3>Share the Joy</h3>
+                            <p>Spread the birthday happiness by sharing this special celebration with friends and family.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="memory-item">
+                        <div class="memory-icon">
+                            <i class="fas fa-calendar"></i>
+                        </div>
+                        <div class="memory-content">
+                            <h3>Mark This Day</h3>
+                            <p>This special day will always hold a place in our hearts as a celebration of you.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="final-message">
+                    <div class="message-card">
+                        <h3>A Special Message Just for You</h3>
+                        <p>
+                            Your birthday is not just a day on the calendar - it's a celebration of the wonderful person you are, 
+                            the lives you've touched, and the bright future ahead of you. Thank you for being such an amazing 
+                            part of this world. Here's to another year of laughter, love, and incredible adventures!
+                        </p>
+                        <div class="signature">With love and best wishes ❤️</div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -217,14 +287,14 @@
 
     <!-- Footer -->
     <footer class="footer">
-        <div class="footer-container">
+        <div class="container">
             <div class="footer-content">
-                <p>&copy; 2025 . Made by Muneeb with <i class="fas fa-heart"></i> for someone unforgettable.</p>
-                <!-- <div class="footer-social">
-                    <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
-                    <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
-                    <a href="#" class="social-link"><i class="fab fa-facebook"></i></a>
-                </div> -->
+                <p>Made by Muneeb with </p>
+                <div class="footer-hearts">
+                    <i class="fas fa-heart"></i>
+                    <i class="fas fa-heart"></i>
+                    <i class="fas fa-heart"></i>
+                </div>
             </div>
         </div>
     </footer>

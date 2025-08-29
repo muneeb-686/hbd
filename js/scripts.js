@@ -1,163 +1,254 @@
 /**
- * Professional Birthday Wishes Website
- * Main JavaScript functionality
- * 
- * Features:
- * - Smooth animations and interactions
- * - Confetti celebrations
- * - Music visualizer
- * - Responsive navigation
- * - Performance optimized
+ * Modern Birthday Wishes Interactive Experience
+ * Enhanced JavaScript with smooth animations and interactions
  */
 
-class BirthdayWishApp {
+class BirthdayExperience {
     constructor() {
+        this.state = {
+            isLoaded: false,
+            isMusicPlaying: false,
+            confettiActive: false,
+            currentSection: 'home'
+        };
+        
+        this.elements = {};
+        this.animations = new Map();
+        this.observers = [];
+        
         this.init();
-        this.bindEvents();
-        this.setupIntersectionObserver();
     }
 
     /**
-     * Initialize the application
+     * Initialize the birthday experience
      */
     init() {
-        this.elements = {
-            loadingScreen: document.getElementById('loadingScreen'),
-            celebrateBtn: document.getElementById('celebrateBtn'),
-            wishBtn: document.getElementById('wishBtn'),
-            confettiBtn: document.getElementById('confettiBtn'),
-            musicBtn: document.getElementById('musicBtn'),
-            confettiContainer: document.getElementById('confettiContainer'),
-            musicVisualizer: document.getElementById('musicVisualizer'),
-            navLinks: document.querySelectorAll('.nav-link'),
-            sections: document.querySelectorAll('section[id]')
-        };
-
-        this.state = {
-            isLoading: true,
-            isMusicPlaying: false,
-            activeSection: 'home'
-        };
-
-        this.animations = {
-            confettiAnimations: [],
-            musicTimeout: null
-        };
-
-        // Remove loading screen after content loads
-        this.hideLoadingScreen();
+        this.cacheElements();
+        this.setupEventListeners();
+        this.initIntersectionObserver();
+        this.handleLoading();
+        this.createFloatingElements();
+        
+        console.log('🎉 Birthday Experience initialized!');
     }
 
     /**
-     * Bind event listeners
+     * Cache DOM elements for better performance
      */
-    bindEvents() {
+    cacheElements() {
+        this.elements = {
+            // Core elements
+            loadingScreen: document.getElementById('loadingScreen'),
+            navbar: document.getElementById('navbar'),
+            mobileToggle: document.getElementById('mobileToggle'),
+            
+            // Interactive buttons
+            celebrateBtn: document.getElementById('celebrateBtn'),
+            wishesBtn: document.getElementById('wishesBtn'),
+            confettiBtn: document.getElementById('confettiBtn'),
+            musicBtn: document.getElementById('musicBtn'),
+            playButton: document.getElementById('playButton'),
+            
+            // Visual elements
+            confettiBurst: document.getElementById('confettiBurst'),
+            confettiArea: document.getElementById('confettiArea'),
+            musicPlayer: document.getElementById('musicPlayer'),
+            equalizer: document.querySelector('.equalizer'),
+            
+            // Navigation
+            navLinks: document.querySelectorAll('.nav-link'),
+            sections: document.querySelectorAll('section[id]'),
+            
+            // Animation targets
+            wishCards: document.querySelectorAll('.wish-card'),
+            celebrationCards: document.querySelectorAll('.celebration-card'),
+            memoryItems: document.querySelectorAll('.memory-item'),
+            cake: document.querySelector('.cake'),
+            balloons: document.querySelectorAll('.balloon'),
+            candles: document.querySelectorAll('.flame')
+        };
+    }
+
+    /**
+     * Set up all event listeners
+     */
+    setupEventListeners() {
         // Button interactions
-        this.elements.celebrateBtn?.addEventListener('click', () => this.triggerCelebration());
-        this.elements.wishBtn?.addEventListener('click', () => this.scrollToSection('wishes'));
+        this.elements.celebrateBtn?.addEventListener('click', () => this.triggerMainCelebration());
+        this.elements.wishesBtn?.addEventListener('click', () => this.scrollToSection('wishes'));
         this.elements.confettiBtn?.addEventListener('click', () => this.launchConfetti());
-        this.elements.musicBtn?.addEventListener('click', () => this.toggleMusicVisualizer());
+        this.elements.musicBtn?.addEventListener('click', () => this.toggleMusic());
+        this.elements.playButton?.addEventListener('click', () => this.toggleMusic());
 
         // Navigation
         this.elements.navLinks.forEach(link => {
-            link.addEventListener('click', (e) => this.handleNavigation(e));
+            link.addEventListener('click', (e) => this.handleNavClick(e));
         });
 
-        // Scroll event for navbar
-        let ticking = false;
-        window.addEventListener('scroll', () => {
-            if (!ticking) {
-                requestAnimationFrame(() => {
-                    this.handleScroll();
-                    ticking = false;
-                });
-                ticking = true;
-            }
-        });
+        // Mobile menu
+        this.elements.mobileToggle?.addEventListener('click', () => this.toggleMobileMenu());
 
-        // Resize event
-        window.addEventListener('resize', this.debounce(() => {
-            this.handleResize();
-        }, 250));
+        // Scroll handling with throttle
+        this.addScrollListener();
 
         // Keyboard interactions
         document.addEventListener('keydown', (e) => this.handleKeyboard(e));
+
+        // Window events
+        window.addEventListener('resize', this.debounce(() => this.handleResize(), 250));
+        window.addEventListener('beforeunload', () => this.cleanup());
+
+        // Interactive cake candles
+        this.elements.candles.forEach((flame, index) => {
+            flame.addEventListener('click', () => this.blowOutCandle(flame, index));
+        });
+
+        // Card hover effects
+        this.setupCardInteractions();
     }
 
     /**
-     * Setup Intersection Observer for scroll animations
+     * Handle loading screen with enhanced animation
      */
-    setupIntersectionObserver() {
-        const options = {
+    handleLoading() {
+        // Simulate loading time
+        setTimeout(() => {
+            this.elements.loadingScreen?.classList.add('hidden');
+            this.state.isLoaded = true;
+            document.body.classList.remove('no-scroll');
+            
+            // Trigger welcome animation
+            setTimeout(() => this.playWelcomeAnimation(), 500);
+        }, 0);
+    }
+
+    /**
+     * Play welcome animation sequence
+     */
+    playWelcomeAnimation() {
+        // Animate cake candles
+        this.animateCakeCandles();
+        
+        // Float balloons
+        this.animateBalloons();
+        
+        // Create welcome particles
+        this.createWelcomeParticles();
+    }
+
+    /**
+     * Set up intersection observer for scroll animations
+     */
+    initIntersectionObserver() {
+        const observerOptions = {
             threshold: 0.1,
             rootMargin: '0px 0px -50px 0px'
         };
 
-        this.observer = new IntersectionObserver((entries) => {
+        // Section observer for navigation
+        const sectionObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    entry.target.classList.add('animate-in');
-                    this.updateActiveNavLink(entry.target.id);
+                    this.updateActiveNavigation(entry.target.id);
                 }
             });
-        }, options);
+        }, observerOptions);
 
-        // Observe all sections
+        // Animation observer for cards and elements
+        const animationObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe sections
         this.elements.sections.forEach(section => {
-            this.observer.observe(section);
+            sectionObserver.observe(section);
         });
 
-        // Observe cards and features for animations
-        const animatedElements = document.querySelectorAll('.wish-card, .memory-feature');
-        animatedElements.forEach(el => {
-            this.observer.observe(el);
+        // Observe animated elements
+        [...this.elements.wishCards, ...this.elements.celebrationCards, ...this.elements.memoryItems].forEach(el => {
+            if (el) {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(30px)';
+                el.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+                animationObserver.observe(el);
+            }
         });
+
+        this.observers.push(sectionObserver, animationObserver);
     }
 
     /**
-     * Hide loading screen with smooth transition
+     * Handle scroll events with navbar effects
      */
-    hideLoadingScreen() {
-        setTimeout(() => {
-            this.elements.loadingScreen.classList.add('hidden');
-            this.state.isLoading = false;
-            document.body.classList.remove('no-scroll');
-            
-            // Trigger initial animations
-            setTimeout(() => {
-                this.triggerInitialAnimations();
-            }, 500);
-        }, 2000);
-    }
-
-    /**
-     * Trigger initial page animations
-     */
-    triggerInitialAnimations() {
-        // Add floating particles to hero
-        this.createFloatingParticles();
+    addScrollListener() {
+        let ticking = false;
         
-        // Animate cake candles
-        this.animateCakeCandles();
+        const handleScroll = () => {
+            if (!ticking) {
+                requestAnimationFrame(() => {
+                    const scrollY = window.scrollY;
+                    
+                    // Update navbar appearance
+                    if (scrollY > 50) {
+                        this.elements.navbar?.classList.add('scrolled');
+                    } else {
+                        this.elements.navbar?.classList.remove('scrolled');
+                    }
+                    
+                    // Parallax effect for floating elements
+                    this.updateParallax(scrollY);
+                    
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll, { passive: true });
+    }
+
+    /**
+     * Update parallax effects
+     */
+    updateParallax(scrollY) {
+        const balloons = document.querySelectorAll('.balloon');
+        const hearts = document.querySelectorAll('.heart');
+        
+        balloons.forEach((balloon, index) => {
+            const speed = 0.2 + (index * 0.1);
+            balloon.style.transform += ` translateY(${scrollY * speed}px)`;
+        });
+        
+        hearts.forEach((heart, index) => {
+            const speed = 0.1 + (index * 0.05);
+            heart.style.transform += ` translateY(${scrollY * speed}px)`;
+        });
     }
 
     /**
      * Handle navigation clicks
      */
-    handleNavigation(e) {
+    handleNavClick(e) {
         e.preventDefault();
-        const targetId = e.target.getAttribute('href').substring(1);
-        this.scrollToSection(targetId);
+        const targetId = e.target.getAttribute('href')?.substring(1);
+        if (targetId) {
+            this.scrollToSection(targetId);
+        }
     }
 
     /**
      * Smooth scroll to section
      */
     scrollToSection(sectionId) {
-        const targetSection = document.getElementById(sectionId);
-        if (targetSection) {
-            const offset = 80; // Navbar height
-            const targetPosition = targetSection.offsetTop - offset;
+        const target = document.getElementById(sectionId);
+        if (target) {
+            const offset = 80; // Account for fixed navbar
+            const targetPosition = target.offsetTop - offset;
             
             window.scrollTo({
                 top: targetPosition,
@@ -167,184 +258,288 @@ class BirthdayWishApp {
     }
 
     /**
-     * Handle scroll events
+     * Update active navigation
      */
-    handleScroll() {
-        const scrollY = window.scrollY;
-        const navbar = document.querySelector('.navbar');
-        
-        // Add/remove navbar shadow
-        if (scrollY > 50) {
-            navbar.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.1)';
-        } else {
-            navbar.style.boxShadow = 'none';
-        }
-
-        // Parallax effect for hero background
-        const heroSection = document.querySelector('.hero-section');
-        if (heroSection && scrollY < window.innerHeight) {
-            const parallaxElements = heroSection.querySelectorAll('.floating-balloon');
-            parallaxElements.forEach((element, index) => {
-                const speed = 0.5 + (index * 0.1);
-                element.style.transform = `translateY(${scrollY * speed}px)`;
-            });
-        }
-    }
-
-    /**
-     * Update active navigation link
-     */
-    updateActiveNavLink(activeId) {
+    updateActiveNavigation(activeId) {
         this.elements.navLinks.forEach(link => {
             link.classList.remove('active');
             if (link.getAttribute('href') === `#${activeId}`) {
                 link.classList.add('active');
             }
         });
-        this.state.activeSection = activeId;
+        
+        this.state.currentSection = activeId;
     }
 
     /**
-     * Trigger celebration with multiple effects
+     * Trigger main celebration with multiple effects
      */
-    triggerCelebration() {
+    triggerMainCelebration() {
+        // Create ripple effect
+        this.createRippleEffect(this.elements.celebrateBtn);
+        
         // Launch confetti
         this.launchConfetti();
         
-        // Add celebration class to cake
-        const cake = document.querySelector('.birthday-cake');
-        cake.classList.add('celebrating');
-        
-        // Create celebration ripple effect
-        this.createRippleEffect(this.elements.celebrateBtn);
+        // Animate cake
+        this.celebrateCake();
         
         // Animate balloons
         this.animateBalloons();
         
-        // Reset cake animation
+        // Play celebration sound (visual feedback)
+        this.visualCelebrationSound();
+        
+        // Scroll to wishes section after animation
         setTimeout(() => {
-            cake.classList.remove('celebrating');
-        }, 2000);
+            this.scrollToSection('wishes');
+        }, 1500);
     }
 
     /**
-     * Launch confetti animation
+     * Launch confetti with enhanced physics
      */
     launchConfetti() {
-        const colors = ['#667eea', '#764ba2', '#f093fb', '#4ecdc4', '#feca57', '#ff6b6b'];
-        const confettiCount = 100;
+        if (this.state.confettiActive) return;
         
+        this.state.confettiActive = true;
+        const colors = ['#667eea', '#764ba2', '#f093fb', '#fa709a', '#4facfe', '#fee140'];
+        const confettiCount = 150;
+        const container = this.elements.confettiBurst || this.elements.confettiArea;
+        
+        if (!container) return;
+
         // Clear existing confetti
-        this.animations.confettiAnimations.forEach(animation => {
-            animation.remove();
-        });
-        this.animations.confettiAnimations = [];
+        container.innerHTML = '';
 
         for (let i = 0; i < confettiCount; i++) {
             setTimeout(() => {
-                this.createConfettiPiece(colors);
-            }, i * 20);
+                this.createConfettiPiece(colors, container);
+            }, i * 15);
         }
+
+        // Reset confetti state
+        setTimeout(() => {
+            this.state.confettiActive = false;
+            container.innerHTML = '';
+        }, 4000);
 
         // Create ripple effect
         this.createRippleEffect(this.elements.confettiBtn);
     }
 
     /**
-     * Create individual confetti piece
+     * Create individual confetti piece with physics
      */
-    createConfettiPiece(colors) {
+    createConfettiPiece(colors, container) {
         const confetti = document.createElement('div');
         const color = colors[Math.floor(Math.random() * colors.length)];
         const size = Math.random() * 8 + 4;
-        const startX = Math.random() * window.innerWidth;
-        const animationDuration = Math.random() * 2 + 3;
+        const startX = Math.random() * (container.offsetWidth || window.innerWidth);
+        const duration = Math.random() * 2 + 3;
+        const rotation = Math.random() * 360;
         
         confetti.style.cssText = `
-            position: fixed;
+            position: absolute;
             top: -10px;
             left: ${startX}px;
             width: ${size}px;
             height: ${size}px;
             background: ${color};
             border-radius: ${Math.random() > 0.5 ? '50%' : '0'};
-            z-index: 10000;
             pointer-events: none;
-            animation: confettiFall ${animationDuration}s linear forwards;
+            transform: rotate(${rotation}deg);
+            animation: confettiDrop ${duration}s linear forwards;
+            z-index: 1000;
         `;
 
-        document.body.appendChild(confetti);
-        this.animations.confettiAnimations.push(confetti);
+        container.appendChild(confetti);
 
-        // Remove confetti after animation
+        // Clean up after animation
         setTimeout(() => {
-            if (confetti.parentNode) {
-                confetti.remove();
-            }
-        }, animationDuration * 1000);
+            confetti.remove();
+        }, duration * 1000);
     }
 
     /**
-     * Toggle music visualizer
+     * Toggle music with visual effects
      */
-    toggleMusicVisualizer() {
+    toggleMusic() {
         this.state.isMusicPlaying = !this.state.isMusicPlaying;
         const button = this.elements.musicBtn;
-        const visualizer = this.elements.musicVisualizer;
+        const playButton = this.elements.playButton;
+        const equalizer = this.elements.equalizer;
 
         if (this.state.isMusicPlaying) {
-            button.innerHTML = '<i class="fas fa-stop"></i><span>Stop Music</span>';
-            visualizer.classList.add('active');
-            this.startMusicAnimation();
+            // Update button text
+            if (button) {
+                button.innerHTML = '<i class="fas fa-stop"></i><span>Stop Music</span>';
+            }
+            
+            // Update play button
+            if (playButton) {
+                playButton.innerHTML = '<i class="fas fa-pause"></i>';
+            }
+            
+            // Start visualizer
+            equalizer?.classList.add('active');
+            this.startMusicVisualization();
+            
         } else {
-            button.innerHTML = '<i class="fas fa-music"></i><span>Play Birthday Song</span>';
-            visualizer.classList.remove('active');
-            this.stopMusicAnimation();
+            // Reset button text
+            if (button) {
+                button.innerHTML = '<i class="fas fa-music"></i><span>Play Music</span>';
+            }
+            
+            // Reset play button
+            if (playButton) {
+                playButton.innerHTML = '<i class="fas fa-play"></i>';
+            }
+            
+            // Stop visualizer
+            equalizer?.classList.remove('active');
+            this.stopMusicVisualization();
         }
 
-        this.createRippleEffect(button);
+        // Create ripple effect
+        this.createRippleEffect(button || playButton);
     }
 
     /**
-     * Start music visualizer animation
+     * Start music visualization
      */
-    startMusicAnimation() {
-        const bars = this.elements.musicVisualizer.querySelectorAll('.music-bar');
+    startMusicVisualization() {
+        const bars = document.querySelectorAll('.equalizer .bar');
         
         const animateBars = () => {
             bars.forEach(bar => {
-                const height = Math.random() * 60 + 20;
+                const height = Math.random() * 40 + 20;
                 bar.style.height = `${height}px`;
             });
         };
 
-        // Initial animation
-        animateBars();
-        
-        // Continue animation while music is playing
-        this.animations.musicTimeout = setInterval(animateBars, 200);
+        // Start animation loop
+        this.musicInterval = setInterval(animateBars, 200);
     }
 
     /**
-     * Stop music visualizer animation
+     * Stop music visualization
      */
-    stopMusicAnimation() {
-        if (this.animations.musicTimeout) {
-            clearInterval(this.animations.musicTimeout);
-            this.animations.musicTimeout = null;
+    stopMusicVisualization() {
+        if (this.musicInterval) {
+            clearInterval(this.musicInterval);
+            this.musicInterval = null;
         }
 
         // Reset bars to default height
-        const bars = this.elements.musicVisualizer.querySelectorAll('.music-bar');
+        const bars = document.querySelectorAll('.equalizer .bar');
         bars.forEach(bar => {
             bar.style.height = '20px';
         });
     }
 
     /**
+     * Animate cake for celebration
+     */
+    celebrateCake() {
+        const cake = this.elements.cake;
+        if (!cake) return;
+
+        cake.style.animation = 'none';
+        setTimeout(() => {
+            cake.style.animation = 'bounce 0.6s ease-in-out 3';
+        }, 10);
+
+        // Make candles flicker more intensely
+        this.elements.candles.forEach(flame => {
+            flame.style.animationDuration = '0.3s';
+        });
+
+        // Reset candle animation after celebration
+        setTimeout(() => {
+            this.elements.candles.forEach(flame => {
+                flame.style.animationDuration = '0.6s';
+            });
+        }, 2000);
+    }
+
+    /**
+     * Animate balloons floating
+     */
+    animateBalloons() {
+        this.elements.balloons.forEach((balloon, index) => {
+            setTimeout(() => {
+                balloon.style.transform = `translateY(-30px) scale(1.1)`;
+                balloon.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+                
+                setTimeout(() => {
+                    balloon.style.transform = '';
+                }, 800);
+            }, index * 200);
+        });
+    }
+
+    /**
+     * Animate cake candles on load
+     */
+    animateCakeCandles() {
+        this.elements.candles.forEach((flame, index) => {
+            setTimeout(() => {
+                flame.style.animationDelay = `${Math.random() * 0.5}s`;
+                flame.style.animationDuration = `${0.4 + Math.random() * 0.4}s`;
+            }, index * 100);
+        });
+    }
+
+    /**
+     * Blow out candle interaction
+     */
+    blowOutCandle(flame, index) {
+        flame.style.opacity = '0';
+        flame.style.transform = 'translateX(-50%) scale(0)';
+        
+        // Create smoke effect
+        this.createSmokeEffect(flame);
+        
+        // Relight after 2 seconds
+        setTimeout(() => {
+            flame.style.opacity = '1';
+            flame.style.transform = 'translateX(-50%) scale(1)';
+        }, 2000);
+    }
+
+    /**
+     * Create smoke effect when candle is blown out
+     */
+    createSmokeEffect(flame) {
+        const smoke = document.createElement('div');
+        const rect = flame.getBoundingClientRect();
+        
+        smoke.style.cssText = `
+            position: fixed;
+            left: ${rect.left + rect.width/2}px;
+            top: ${rect.top}px;
+            width: 4px;
+            height: 4px;
+            background: rgba(150, 150, 150, 0.6);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1000;
+            animation: smokeRise 1s ease-out forwards;
+        `;
+
+        document.body.appendChild(smoke);
+
+        // Remove smoke after animation
+        setTimeout(() => smoke.remove(), 1000);
+    }
+
+    /**
      * Create ripple effect on button click
      */
     createRippleEffect(button) {
+        if (!button) return;
+
         const ripple = document.createElement('div');
         const rect = button.getBoundingClientRect();
         
@@ -356,64 +551,68 @@ class BirthdayWishApp {
             animation: ripple 0.6s linear;
             left: 50%;
             top: 50%;
-            margin-left: -10px;
-            margin-top: -10px;
             width: 20px;
             height: 20px;
+            margin-left: -10px;
+            margin-top: -10px;
             pointer-events: none;
         `;
 
         button.style.position = 'relative';
+        button.style.overflow = 'hidden';
         button.appendChild(ripple);
 
-        setTimeout(() => {
-            ripple.remove();
-        }, 600);
+        setTimeout(() => ripple.remove(), 600);
     }
 
     /**
-     * Animate floating balloons
+     * Visual celebration sound effect
      */
-    animateBalloons() {
-        const balloons = document.querySelectorAll('.floating-balloon');
-        balloons.forEach((balloon, index) => {
+    visualCelebrationSound() {
+        const soundWaves = document.createElement('div');
+        soundWaves.style.cssText = `
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 100px;
+            height: 100px;
+            border: 3px solid rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            pointer-events: none;
+            z-index: 1000;
+            animation: soundWave 1s ease-out forwards;
+        `;
+
+        document.body.appendChild(soundWaves);
+
+        // Create multiple sound wave rings
+        for (let i = 1; i <= 3; i++) {
             setTimeout(() => {
-                balloon.style.transform = 'translateY(-30px) scale(1.1)';
-                balloon.style.transition = 'all 0.5s ease';
+                const wave = soundWaves.cloneNode();
+                wave.style.animationDelay = `${i * 0.2}s`;
+                document.body.appendChild(wave);
                 
-                setTimeout(() => {
-                    balloon.style.transform = '';
-                }, 500);
-            }, index * 200);
-        });
+                setTimeout(() => wave.remove(), 1500);
+            }, i * 200);
+        }
+
+        setTimeout(() => soundWaves.remove(), 1500);
     }
 
     /**
-     * Animate cake candles
+     * Create welcome particles
      */
-    animateCakeCandles() {
-        const candles = document.querySelectorAll('.birthday-cake .candle');
-        candles.forEach((candle, index) => {
-            setTimeout(() => {
-                const flame = candle.querySelector('.flame');
-                if (flame) {
-                    flame.style.animationDuration = `${0.4 + Math.random() * 0.4}s`;
-                }
-            }, index * 100);
-        });
-    }
-
-    /**
-     * Create floating particles
-     */
-    createFloatingParticles() {
-        const particlesContainer = document.querySelector('.hero-particles');
-        const particleCount = 20;
+    createWelcomeParticles() {
+        const particleCount = 30;
+        const container = document.querySelector('.hero-section');
+        
+        if (!container) return;
 
         for (let i = 0; i < particleCount; i++) {
             setTimeout(() => {
-                this.createFloatingParticle(particlesContainer);
-            }, i * 300);
+                this.createFloatingParticle(container);
+            }, i * 100);
         }
     }
 
@@ -422,51 +621,179 @@ class BirthdayWishApp {
      */
     createFloatingParticle(container) {
         const particle = document.createElement('div');
-        const size = Math.random() * 4 + 2;
+        const colors = ['#667eea', '#764ba2', '#f093fb', '#fa709a', '#4facfe'];
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        const size = Math.random() * 6 + 2;
         const startX = Math.random() * 100;
-        const animationDuration = Math.random() * 10 + 10;
+        const duration = Math.random() * 8 + 5;
         
         particle.style.cssText = `
             position: absolute;
             width: ${size}px;
             height: ${size}px;
-            background: rgba(255, 255, 255, 0.3);
+            background: ${color};
             border-radius: 50%;
             left: ${startX}%;
             top: 100%;
-            animation: particleFloat ${animationDuration}s linear infinite;
+            opacity: 0.7;
+            pointer-events: none;
+            animation: particleFloat ${duration}s linear infinite;
+            z-index: 1;
         `;
 
         container.appendChild(particle);
 
-        // Remove particle after several cycles
+        // Remove after several cycles
         setTimeout(() => {
             if (particle.parentNode) {
                 particle.remove();
             }
-        }, animationDuration * 3000);
+        }, duration * 2000);
     }
 
     /**
-     * Handle keyboard interactions
+     * Create floating elements continuously
+     */
+    createFloatingElements() {
+        // Create heart particles periodically
+        setInterval(() => {
+            if (Math.random() < 0.3) { // 30% chance every interval
+                this.createRandomHeart();
+            }
+        }, 3000);
+
+        // Create star particles
+        setInterval(() => {
+            if (Math.random() < 0.2) { // 20% chance
+                this.createRandomStar();
+            }
+        }, 4000);
+    }
+
+    /**
+     * Create random heart particle
+     */
+    createRandomHeart() {
+        const heart = document.createElement('div');
+        heart.className = 'floating-heart-particle';
+        
+        heart.style.cssText = `
+            position: fixed;
+            width: 15px;
+            height: 15px;
+            background: #fa709a;
+            transform: rotate(45deg);
+            left: ${Math.random() * 100}vw;
+            top: 100vh;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.6;
+            animation: heartFloat 6s linear forwards;
+        `;
+
+        // Create heart shape
+        heart.innerHTML = `
+            <div style="
+                position: absolute;
+                width: 15px;
+                height: 15px;
+                background: #fa709a;
+                border-radius: 50%;
+                top: -7.5px;
+                left: 0;
+            "></div>
+            <div style="
+                position: absolute;
+                width: 15px;
+                height: 15px;
+                background: #fa709a;
+                border-radius: 50%;
+                top: 0;
+                left: -7.5px;
+            "></div>
+        `;
+
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 6000);
+    }
+
+    /**
+     * Create random star particle
+     */
+    createRandomStar() {
+        const star = document.createElement('div');
+        star.innerHTML = '✨';
+        
+        star.style.cssText = `
+            position: fixed;
+            font-size: 20px;
+            left: ${Math.random() * 100}vw;
+            top: 100vh;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.8;
+            animation: starFloat 8s linear forwards;
+        `;
+
+        document.body.appendChild(star);
+        setTimeout(() => star.remove(), 8000);
+    }
+
+    /**
+     * Setup card interaction effects
+     */
+    setupCardInteractions() {
+        // Add hover effects to wish cards
+        this.elements.wishCards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-12px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = '';
+            });
+        });
+
+        // Add click effects to celebration cards
+        this.elements.celebrationCards.forEach(card => {
+            card.addEventListener('click', () => {
+                this.createRippleEffect(card);
+            });
+        });
+    }
+
+    /**
+     * Handle keyboard shortcuts
      */
     handleKeyboard(e) {
         switch (e.key) {
             case ' ':
                 if (e.target === document.body) {
                     e.preventDefault();
-                    this.triggerCelebration();
+                    this.triggerMainCelebration();
                 }
                 break;
-            case 'Enter':
-                if (e.target.classList.contains('btn')) {
-                    e.target.click();
-                }
+            case 'c':
+            case 'C':
+                if (e.ctrlKey || e.metaKey) break; // Don't interfere with copy
+                this.launchConfetti();
+                break;
+            case 'm':
+            case 'M':
+                this.toggleMusic();
                 break;
             case 'Escape':
                 if (this.state.isMusicPlaying) {
-                    this.toggleMusicVisualizer();
+                    this.toggleMusic();
                 }
+                break;
+            case 'ArrowUp':
+                e.preventDefault();
+                window.scrollBy(0, -100);
+                break;
+            case 'ArrowDown':
+                e.preventDefault();
+                window.scrollBy(0, 100);
                 break;
         }
     }
@@ -475,15 +802,27 @@ class BirthdayWishApp {
      * Handle window resize
      */
     handleResize() {
-        // Recalculate positions and animations if needed
-        if (this.state.isMusicPlaying) {
-            this.stopMusicAnimation();
-            this.startMusicAnimation();
+        // Recalculate particle positions
+        const particles = document.querySelectorAll('.floating-heart-particle, [style*="particleFloat"]');
+        particles.forEach(particle => {
+            if (particle.parentNode) {
+                particle.remove();
+            }
+        });
+    }
+
+    /**
+     * Toggle mobile menu
+     */
+    toggleMobileMenu() {
+        const navMenu = document.querySelector('.nav-menu');
+        if (navMenu) {
+            navMenu.classList.toggle('mobile-active');
         }
     }
 
     /**
-     * Debounce utility function
+     * Utility: Debounce function
      */
     debounce(func, wait) {
         let timeout;
@@ -498,159 +837,214 @@ class BirthdayWishApp {
     }
 
     /**
-     * Utility function to generate random numbers
-     */
-    random(min, max) {
-        return Math.random() * (max - min) + min;
-    }
-
-    /**
      * Clean up resources
      */
-    destroy() {
-        // Clear all timeouts and intervals
-        if (this.animations.musicTimeout) {
-            clearInterval(this.animations.musicTimeout);
+    cleanup() {
+        // Clear intervals
+        if (this.musicInterval) {
+            clearInterval(this.musicInterval);
         }
 
-        // Remove all event listeners
-        window.removeEventListener('scroll', this.handleScroll);
-        window.removeEventListener('resize', this.handleResize);
+        // Disconnect observers
+        this.observers.forEach(observer => observer.disconnect());
 
-        // Disconnect observer
-        if (this.observer) {
-            this.observer.disconnect();
-        }
-
-        // Clear confetti animations
-        this.animations.confettiAnimations.forEach(animation => {
-            if (animation.parentNode) {
-                animation.remove();
-            }
-        });
+        // Clear animations
+        this.animations.clear();
+        
+        // Remove dynamic particles
+        const particles = document.querySelectorAll('.floating-heart-particle, [style*="particleFloat"]');
+        particles.forEach(particle => particle.remove());
     }
 }
 
 /**
- * Enhanced interactions and effects
+ * Enhanced CSS Animations (added via JavaScript)
  */
-class BirthdayEffects {
-    static addCustomStyles() {
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes particleFloat {
-                0% {
-                    transform: translateY(0) rotate(0deg);
-                    opacity: 0;
-                }
-                10% {
-                    opacity: 1;
-                }
-                90% {
-                    opacity: 1;
-                }
-                100% {
-                    transform: translateY(-100vh) rotate(360deg);
-                    opacity: 0;
-                }
-            }
-
-            .birthday-cake.celebrating {
-                animation: cakeShake 0.5s ease-in-out 4;
-            }
-
-            @keyframes cakeShake {
-                0%, 100% { transform: translateX(0); }
-                25% { transform: translateX(-5px); }
-                75% { transform: translateX(5px); }
-            }
-
-            .animate-in {
-                opacity: 1 !important;
-                transform: translateY(0) !important;
-            }
-
-            .wish-card,
-            .memory-feature {
+function injectAdditionalStyles() {
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes ripple {
+            to {
+                transform: scale(4);
                 opacity: 0;
-                transform: translateY(30px);
-                transition: all 0.6s ease;
+            }
+        }
+
+        @keyframes smokeRise {
+            0% {
+                opacity: 0.6;
+                transform: translateY(0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-30px) scale(1.5);
+            }
+        }
+
+        @keyframes soundWave {
+            0% {
+                transform: translate(-50%, -50%) scale(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(3);
+                opacity: 0;
+            }
+        }
+
+        @keyframes particleFloat {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.7;
+            }
+            90% {
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes heartFloat {
+            0% {
+                transform: translateY(0) rotate(45deg);
+                opacity: 0.6;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(405deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes starFloat {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 0.8;
+            }
+            50% {
+                transform: translateY(-50vh) scale(1.2);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) scale(0.8);
+                opacity: 0;
+            }
+        }
+
+        /* Mobile menu styles */
+        @media (max-width: 768px) {
+            .nav-menu {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: rgba(255, 255, 255, 0.98);
+                backdrop-filter: blur(20px);
+                flex-direction: column;
+                padding: var(--space-md);
+                box-shadow: var(--shadow-lg);
+                transform: translateY(-10px);
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.3s ease;
             }
 
-            .wish-card:nth-child(even) {
-                transform: translateY(30px) translateX(-20px);
+            .nav-menu.mobile-active {
+                display: flex;
+                transform: translateY(0);
+                opacity: 1;
+                visibility: visible;
             }
 
-            .wish-card:nth-child(odd) {
-                transform: translateY(30px) translateX(20px);
+            .mobile-toggle.active span:nth-child(1) {
+                transform: rotate(45deg) translate(5px, 5px);
             }
 
-            .memory-feature:nth-child(even) {
-                transform: translateY(30px) scale(0.95);
+            .mobile-toggle.active span:nth-child(2) {
+                opacity: 0;
             }
 
-            @media (prefers-reduced-motion: reduce) {
-                * {
-                    animation-duration: 0.01ms !important;
-                    animation-iteration-count: 1 !important;
-                    transition-duration: 0.01ms !important;
-                }
+            .mobile-toggle.active span:nth-child(3) {
+                transform: rotate(-45deg) translate(7px, -6px);
             }
-        `;
-        document.head.appendChild(style);
-    }
+        }
 
-    static initAccessibility() {
-        // Add focus indicators
-        const focusableElements = document.querySelectorAll('button, a, [tabindex]');
-        focusableElements.forEach(el => {
-            el.addEventListener('focus', () => {
-                el.style.outline = '2px solid #667eea';
-                el.style.outlineOffset = '2px';
-            });
+        /* Accessibility improvements */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Focus indicators */
+        button:focus,
+        a:focus {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+
+        /* High contrast mode support */
+        @media (prefers-contrast: high) {
+            .btn {
+                border: 2px solid;
+            }
             
-            el.addEventListener('blur', () => {
-                el.style.outline = 'none';
-            });
-        });
-    }
+            .wish-card {
+                border: 2px solid var(--gray-dark);
+            }
+        }
+    `;
+    
+    document.head.appendChild(style);
 }
 
 /**
- * Initialize application when DOM is ready
+ * Initialize everything when DOM is ready
  */
 document.addEventListener('DOMContentLoaded', () => {
-    // Add custom styles
-    BirthdayEffects.addCustomStyles();
+    // Inject additional styles
+    injectAdditionalStyles();
     
-    // Initialize accessibility features
-    BirthdayEffects.initAccessibility();
+    // Initialize the birthday experience
+    const birthdayApp = new BirthdayExperience();
     
-    // Initialize main application
-    const app = new BirthdayWishApp();
+    // Make available globally for debugging
+    window.birthdayApp = birthdayApp;
     
-    // Make app globally available for debugging
-    window.birthdayApp = app;
-    
-    console.log('🎉 Birthday Wishes App initialized successfully!');
+    // Add some fun console messages
+    console.log('%c🎉 Welcome to the Birthday Celebration! 🎂', 
+        'color: #667eea; font-size: 16px; font-weight: bold;');
+    console.log('%cKeyboard shortcuts:', 'color: #764ba2; font-weight: bold;');
+    console.log('• Spacebar: Start celebration');
+    console.log('• C: Launch confetti');
+    console.log('• M: Toggle music');
+    console.log('• Esc: Stop music');
+    console.log('• Arrow keys: Scroll up/down');
 });
 
 /**
- * Handle page visibility changes
+ * Handle visibility change for performance
  */
 document.addEventListener('visibilitychange', () => {
     if (document.hidden && window.birthdayApp?.state.isMusicPlaying) {
-        // Pause music visualizer when page is hidden
-        window.birthdayApp.toggleMusicVisualizer();
+        window.birthdayApp.toggleMusic();
     }
 });
 
 /**
- * Service Worker registration for PWA capabilities
+ * Service worker registration (if available)
  */
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        // Service worker would be registered here for PWA functionality
         console.log('🌐 Ready for PWA enhancement');
     });
 }
