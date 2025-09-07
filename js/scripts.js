@@ -1,6 +1,6 @@
 /**
- * Modern Birthday Wishes Interactive Experience
- * Enhanced JavaScript with smooth animations and interactions
+ * Fresh Birthday Celebration Interactive Experience
+ * Light theme with coral & mint color scheme
  */
 
 class BirthdayExperience {
@@ -29,7 +29,7 @@ class BirthdayExperience {
         this.handleLoading();
         this.createFloatingElements();
         
-        console.log('🎉 Birthday Experience initialized!');
+        console.log('🎉 Fresh Birthday Experience initialized!');
     }
 
     /**
@@ -119,7 +119,7 @@ class BirthdayExperience {
             
             // Trigger welcome animation
             setTimeout(() => this.playWelcomeAnimation(), 500);
-        }, 0);
+        }, 2500);
     }
 
     /**
@@ -218,6 +218,7 @@ class BirthdayExperience {
     updateParallax(scrollY) {
         const balloons = document.querySelectorAll('.balloon');
         const hearts = document.querySelectorAll('.heart');
+        const stars = document.querySelectorAll('.star');
         
         balloons.forEach((balloon, index) => {
             const speed = 0.2 + (index * 0.1);
@@ -227,6 +228,11 @@ class BirthdayExperience {
         hearts.forEach((heart, index) => {
             const speed = 0.1 + (index * 0.05);
             heart.style.transform += ` translateY(${scrollY * speed}px)`;
+        });
+
+        stars.forEach((star, index) => {
+            const speed = 0.15 + (index * 0.08);
+            star.style.transform += ` translateY(${scrollY * speed}px)`;
         });
     }
 
@@ -303,8 +309,8 @@ class BirthdayExperience {
         if (this.state.confettiActive) return;
         
         this.state.confettiActive = true;
-        const colors = ['#667eea', '#764ba2', '#f093fb', '#fa709a', '#4facfe', '#fee140'];
-        const confettiCount = 150;
+        const colors = ['#FF6B9D', '#26de81', '#a55eea', '#fdcb6e', '#74b9ff', '#ff7675'];
+        const confettiCount = 120;
         const container = this.elements.confettiBurst || this.elements.confettiArea;
         
         if (!container) return;
@@ -315,7 +321,7 @@ class BirthdayExperience {
         for (let i = 0; i < confettiCount; i++) {
             setTimeout(() => {
                 this.createConfettiPiece(colors, container);
-            }, i * 15);
+            }, i * 12);
         }
 
         // Reset confetti state
@@ -346,18 +352,21 @@ class BirthdayExperience {
             width: ${size}px;
             height: ${size}px;
             background: ${color};
-            border-radius: ${Math.random() > 0.5 ? '50%' : '0'};
+            border-radius: ${Math.random() > 0.5 ? '50%' : '2px'};
             pointer-events: none;
             transform: rotate(${rotation}deg);
             animation: confettiDrop ${duration}s linear forwards;
             z-index: 1000;
+            box-shadow: 0 0 6px rgba(0,0,0,0.1);
         `;
 
         container.appendChild(confetti);
 
         // Clean up after animation
         setTimeout(() => {
-            confetti.remove();
+            if (confetti.parentNode) {
+                confetti.remove();
+            }
         }, duration * 1000);
     }
 
@@ -373,7 +382,7 @@ class BirthdayExperience {
         if (this.state.isMusicPlaying) {
             // Update button text
             if (button) {
-                button.innerHTML = '<i class="fas fa-stop"></i><span>Stop Music</span>';
+                button.innerHTML = '<i class="fas fa-stop"></i><span>Stop Beat</span>';
             }
             
             // Update play button
@@ -388,7 +397,7 @@ class BirthdayExperience {
         } else {
             // Reset button text
             if (button) {
-                button.innerHTML = '<i class="fas fa-music"></i><span>Play Music</span>';
+                button.innerHTML = '<i class="fas fa-music"></i><span>Start the Beat</span>';
             }
             
             // Reset play button
@@ -413,13 +422,13 @@ class BirthdayExperience {
         
         const animateBars = () => {
             bars.forEach(bar => {
-                const height = Math.random() * 40 + 20;
+                const height = Math.random() * 40 + 15;
                 bar.style.height = `${height}px`;
             });
         };
 
         // Start animation loop
-        this.musicInterval = setInterval(animateBars, 200);
+        this.musicInterval = setInterval(animateBars, 180);
     }
 
     /**
@@ -452,7 +461,7 @@ class BirthdayExperience {
 
         // Make candles flicker more intensely
         this.elements.candles.forEach(flame => {
-            flame.style.animationDuration = '0.3s';
+            flame.style.animationDuration = '0.2s';
         });
 
         // Reset candle animation after celebration
@@ -469,7 +478,7 @@ class BirthdayExperience {
     animateBalloons() {
         this.elements.balloons.forEach((balloon, index) => {
             setTimeout(() => {
-                balloon.style.transform = `translateY(-30px) scale(1.1)`;
+                balloon.style.transform = `translateY(-25px) scale(1.1)`;
                 balloon.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
                 
                 setTimeout(() => {
@@ -485,9 +494,9 @@ class BirthdayExperience {
     animateCakeCandles() {
         this.elements.candles.forEach((flame, index) => {
             setTimeout(() => {
-                flame.style.animationDelay = `${Math.random() * 0.5}s`;
-                flame.style.animationDuration = `${0.4 + Math.random() * 0.4}s`;
-            }, index * 100);
+                flame.style.animationDelay = `${Math.random() * 0.4}s`;
+                flame.style.animationDuration = `${0.4 + Math.random() * 0.3}s`;
+            }, index * 150);
         });
     }
 
@@ -525,13 +534,13 @@ class BirthdayExperience {
             border-radius: 50%;
             pointer-events: none;
             z-index: 1000;
-            animation: smokeRise 1s ease-out forwards;
+            animation: smokeRise 1.2s ease-out forwards;
         `;
 
         document.body.appendChild(smoke);
 
         // Remove smoke after animation
-        setTimeout(() => smoke.remove(), 1000);
+        setTimeout(() => smoke.remove(), 1200);
     }
 
     /**
@@ -541,7 +550,6 @@ class BirthdayExperience {
         if (!button) return;
 
         const ripple = document.createElement('div');
-        const rect = button.getBoundingClientRect();
         
         ripple.style.cssText = `
             position: absolute;
@@ -576,7 +584,7 @@ class BirthdayExperience {
             left: 50%;
             width: 100px;
             height: 100px;
-            border: 3px solid rgba(255, 255, 255, 0.8);
+            border: 3px solid rgba(255, 107, 157, 0.8);
             border-radius: 50%;
             transform: translate(-50%, -50%) scale(0);
             pointer-events: none;
@@ -591,6 +599,7 @@ class BirthdayExperience {
             setTimeout(() => {
                 const wave = soundWaves.cloneNode();
                 wave.style.animationDelay = `${i * 0.2}s`;
+                wave.style.borderColor = `rgba(38, 222, 129, ${0.8 - i * 0.2})`;
                 document.body.appendChild(wave);
                 
                 setTimeout(() => wave.remove(), 1500);
@@ -604,7 +613,7 @@ class BirthdayExperience {
      * Create welcome particles
      */
     createWelcomeParticles() {
-        const particleCount = 30;
+        const particleCount = 25;
         const container = document.querySelector('.hero-section');
         
         if (!container) return;
@@ -612,7 +621,7 @@ class BirthdayExperience {
         for (let i = 0; i < particleCount; i++) {
             setTimeout(() => {
                 this.createFloatingParticle(container);
-            }, i * 100);
+            }, i * 120);
         }
     }
 
@@ -621,11 +630,11 @@ class BirthdayExperience {
      */
     createFloatingParticle(container) {
         const particle = document.createElement('div');
-        const colors = ['#667eea', '#764ba2', '#f093fb', '#fa709a', '#4facfe'];
+        const colors = ['#FF6B9D', '#26de81', '#a55eea', '#fdcb6e'];
         const color = colors[Math.floor(Math.random() * colors.length)];
-        const size = Math.random() * 6 + 2;
+        const size = Math.random() * 6 + 3;
         const startX = Math.random() * 100;
-        const duration = Math.random() * 8 + 5;
+        const duration = Math.random() * 6 + 4;
         
         particle.style.cssText = `
             position: absolute;
@@ -635,20 +644,21 @@ class BirthdayExperience {
             border-radius: 50%;
             left: ${startX}%;
             top: 100%;
-            opacity: 0.7;
+            opacity: 0.6;
             pointer-events: none;
             animation: particleFloat ${duration}s linear infinite;
             z-index: 1;
+            box-shadow: 0 0 10px ${color}30;
         `;
 
         container.appendChild(particle);
 
-        // Remove after several cycles
+        // Remove after animation cycle
         setTimeout(() => {
             if (particle.parentNode) {
                 particle.remove();
             }
-        }, duration * 2000);
+        }, duration * 1000);
     }
 
     /**
@@ -657,17 +667,17 @@ class BirthdayExperience {
     createFloatingElements() {
         // Create heart particles periodically
         setInterval(() => {
-            if (Math.random() < 0.3) { // 30% chance every interval
+            if (Math.random() < 0.25) {
                 this.createRandomHeart();
             }
-        }, 3000);
+        }, 3500);
 
         // Create star particles
         setInterval(() => {
-            if (Math.random() < 0.2) { // 20% chance
+            if (Math.random() < 0.15) {
                 this.createRandomStar();
             }
-        }, 4000);
+        }, 5000);
     }
 
     /**
@@ -679,42 +689,42 @@ class BirthdayExperience {
         
         heart.style.cssText = `
             position: fixed;
-            width: 15px;
-            height: 15px;
-            background: #fa709a;
+            width: 16px;
+            height: 14px;
+            background: #FF6B9D;
             transform: rotate(45deg);
             left: ${Math.random() * 100}vw;
             top: 100vh;
             pointer-events: none;
             z-index: 1;
-            opacity: 0.6;
-            animation: heartFloat 6s linear forwards;
+            opacity: 0.5;
+            animation: heartFloat 7s linear forwards;
         `;
 
         // Create heart shape
         heart.innerHTML = `
             <div style="
                 position: absolute;
-                width: 15px;
-                height: 15px;
-                background: #fa709a;
+                width: 16px;
+                height: 16px;
+                background: #FF6B9D;
                 border-radius: 50%;
-                top: -7.5px;
+                top: -8px;
                 left: 0;
             "></div>
             <div style="
                 position: absolute;
-                width: 15px;
-                height: 15px;
-                background: #fa709a;
+                width: 16px;
+                height: 16px;
+                background: #FF6B9D;
                 border-radius: 50%;
                 top: 0;
-                left: -7.5px;
+                left: -8px;
             "></div>
         `;
 
         document.body.appendChild(heart);
-        setTimeout(() => heart.remove(), 6000);
+        setTimeout(() => heart.remove(), 7000);
     }
 
     /**
@@ -722,21 +732,22 @@ class BirthdayExperience {
      */
     createRandomStar() {
         const star = document.createElement('div');
-        star.innerHTML = '✨';
+        const starTypes = ['✨', '⭐', '🌟'];
+        star.innerHTML = starTypes[Math.floor(Math.random() * starTypes.length)];
         
         star.style.cssText = `
             position: fixed;
-            font-size: 20px;
+            font-size: ${Math.random() * 10 + 15}px;
             left: ${Math.random() * 100}vw;
             top: 100vh;
             pointer-events: none;
             z-index: 1;
-            opacity: 0.8;
-            animation: starFloat 8s linear forwards;
+            opacity: 0.7;
+            animation: starFloat 9s linear forwards;
         `;
 
         document.body.appendChild(star);
-        setTimeout(() => star.remove(), 8000);
+        setTimeout(() => star.remove(), 9000);
     }
 
     /**
@@ -746,7 +757,7 @@ class BirthdayExperience {
         // Add hover effects to wish cards
         this.elements.wishCards.forEach(card => {
             card.addEventListener('mouseenter', () => {
-                card.style.transform = 'translateY(-12px) scale(1.02)';
+                card.style.transform = 'translateY(-10px) scale(1.02)';
             });
             
             card.addEventListener('mouseleave', () => {
@@ -775,7 +786,7 @@ class BirthdayExperience {
                 break;
             case 'c':
             case 'C':
-                if (e.ctrlKey || e.metaKey) break; // Don't interfere with copy
+                if (e.ctrlKey || e.metaKey) break;
                 this.launchConfetti();
                 break;
             case 'm':
@@ -816,8 +827,14 @@ class BirthdayExperience {
      */
     toggleMobileMenu() {
         const navMenu = document.querySelector('.nav-menu');
+        const mobileToggle = this.elements.mobileToggle;
+        
         if (navMenu) {
             navMenu.classList.toggle('mobile-active');
+        }
+        
+        if (mobileToggle) {
+            mobileToggle.classList.toggle('active');
         }
     }
 
@@ -877,7 +894,7 @@ function injectAdditionalStyles() {
             }
             100% {
                 opacity: 0;
-                transform: translateY(-30px) scale(1.5);
+                transform: translateY(-35px) scale(1.5);
             }
         }
 
@@ -898,10 +915,10 @@ function injectAdditionalStyles() {
                 opacity: 0;
             }
             10% {
-                opacity: 0.7;
+                opacity: 0.6;
             }
             90% {
-                opacity: 0.7;
+                opacity: 0.6;
             }
             100% {
                 transform: translateY(-100vh) rotate(360deg);
@@ -912,10 +929,10 @@ function injectAdditionalStyles() {
         @keyframes heartFloat {
             0% {
                 transform: translateY(0) rotate(45deg);
-                opacity: 0.6;
+                opacity: 0.5;
             }
             50% {
-                opacity: 1;
+                opacity: 0.8;
             }
             100% {
                 transform: translateY(-100vh) rotate(405deg);
@@ -925,54 +942,16 @@ function injectAdditionalStyles() {
 
         @keyframes starFloat {
             0% {
-                transform: translateY(0) scale(1);
-                opacity: 0.8;
+                transform: translateY(0) scale(1) rotate(0deg);
+                opacity: 0.7;
             }
             50% {
-                transform: translateY(-50vh) scale(1.2);
+                transform: translateY(-50vh) scale(1.3) rotate(180deg);
                 opacity: 1;
             }
             100% {
-                transform: translateY(-100vh) scale(0.8);
+                transform: translateY(-100vh) scale(0.8) rotate(360deg);
                 opacity: 0;
-            }
-        }
-
-        /* Mobile menu styles */
-        @media (max-width: 768px) {
-            .nav-menu {
-                position: absolute;
-                top: 100%;
-                left: 0;
-                width: 100%;
-                background: rgba(255, 255, 255, 0.98);
-                backdrop-filter: blur(20px);
-                flex-direction: column;
-                padding: var(--space-md);
-                box-shadow: var(--shadow-lg);
-                transform: translateY(-10px);
-                opacity: 0;
-                visibility: hidden;
-                transition: all 0.3s ease;
-            }
-
-            .nav-menu.mobile-active {
-                display: flex;
-                transform: translateY(0);
-                opacity: 1;
-                visibility: visible;
-            }
-
-            .mobile-toggle.active span:nth-child(1) {
-                transform: rotate(45deg) translate(5px, 5px);
-            }
-
-            .mobile-toggle.active span:nth-child(2) {
-                opacity: 0;
-            }
-
-            .mobile-toggle.active span:nth-child(3) {
-                transform: rotate(-45deg) translate(7px, -6px);
             }
         }
 
@@ -988,7 +967,7 @@ function injectAdditionalStyles() {
         /* Focus indicators */
         button:focus,
         a:focus {
-            outline: 2px solid var(--primary-color);
+            outline: 2px solid #FF6B9D;
             outline-offset: 2px;
         }
 
@@ -999,7 +978,7 @@ function injectAdditionalStyles() {
             }
             
             .wish-card {
-                border: 2px solid var(--gray-dark);
+                border: 2px solid #495057;
             }
         }
     `;
@@ -1020,10 +999,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Make available globally for debugging
     window.birthdayApp = birthdayApp;
     
-    // Add some fun console messages
-    console.log('%c🎉 Welcome to the Birthday Celebration! 🎂', 
-        'color: #667eea; font-size: 16px; font-weight: bold;');
-    console.log('%cKeyboard shortcuts:', 'color: #764ba2; font-weight: bold;');
+    // Add console messages
+    console.log('%c🎉 Welcome to the Fresh Birthday Celebration! 🎂', 
+        'color: #FF6B9D; font-size: 16px; font-weight: bold;');
+    console.log('%cKeyboard shortcuts:', 'color: #26de81; font-weight: bold;');
     console.log('• Spacebar: Start celebration');
     console.log('• C: Launch confetti');
     console.log('• M: Toggle music');
